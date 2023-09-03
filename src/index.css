@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+  
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #f6b3b3;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.gradient-bg {
+  background: linear-gradient(
+    185deg,
+    rgba(255, 238, 222, 1) 0%,
+    rgba(231, 215, 254, 1) 90%
+  );
+}
+.spotify_grid {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1/2fr 1fr;
+  row-gap: 3px;
+  column-gap: 0px;
+}
