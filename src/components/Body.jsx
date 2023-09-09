@@ -144,7 +144,7 @@ function Body() {
         {featuredPlaylist && (
           <>
             <div className="flex items-end mt-10 ">
-              <h2 className="text-black text-3xl font-bold">featured</h2>
+              <h2 className="text-black text-3xl font-bold">Featured</h2>
             </div>
             <div className="overflow-x-auto space-x-5 flex gap-4 p-10 mb-10">
               {featuredPlaylist.playlists.map(({ name, image }, index) => {

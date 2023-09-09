@@ -12,6 +12,7 @@ export const initialState = {
   newReleases: null,
   categories: null,
   featuredPlaylist: null,
+  searchResults: null,
 };
 
 const reducer = (state, action) => {
@@ -71,6 +72,12 @@ const reducer = (state, action) => {
         ...state,
         featuredPlaylist: action.featuredPlaylist,
       };
+      case reducerCases.SET_SEARCH_RESULTS:
+      return {
+        ...state,
+        searchResults: action.searchResults,
+      };
+      
       
     default:
       return state;

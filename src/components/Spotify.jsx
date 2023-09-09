@@ -16,7 +16,7 @@ function Spotify() {
       </div>
       <div className="">
 
-      <div className=" z-10 h-full w-full bg-white md:ml-[250px]  md:p-4">
+      <div className=" z-10 h-full w-full bg-white md:ml-[190px]  md:p-4">
       <Footer/>
       <SmScreenFooter/>      
       </div>

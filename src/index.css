@@ -29,6 +29,20 @@ body {
     rgba(231, 215, 254, 1) 90%
   );
 }
+
+::-webkit-slider-thumb {
+  color: #1d4ed8;
+  
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: #1d4ed8;
+  overflow: visible;
+  cursor: pointer;
+}
 .spotify_grid {
   display: grid;
   grid-template-rows: 1fr;
