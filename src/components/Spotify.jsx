@@ -20,7 +20,7 @@ function Spotify() {
       <Footer/>
       <SmScreenFooter/>      
       </div>
-      <div className=" block md:hidden">
+      <div className="h-full w-full block md:hidden">
       <SmallScreenNav/>
       </div>
       </div>

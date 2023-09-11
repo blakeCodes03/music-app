@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, {  useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
 import SmallScreenNav from "./SmallScreenNav";
@@ -8,10 +8,10 @@ import { reducerCases } from "../utils/Constants";
 import { FiGrid, FiSearch } from "react-icons/fi";
 import SmScreenFooter from "./SmScreenFooter";
 
-function Search() {
-  const [{ token, searchResults }, dispatch] = useStateProvider();
+function Search({audioRef}) {
+  const [{ token, searchResults, currentPlaying }, dispatch] = useStateProvider();
   const [searchInput, setSearchInput] = useState("");
-  const [songurl, setSongUrl] = useState()
+  const [songurl, setSongUrl] = useState();
   const [song, setSong] = useState({
     id: null,
     name: null,
@@ -21,10 +21,10 @@ function Search() {
     preview_url: null,
   });
   useEffect(() => {
-  // set global state of song anytime local state(song) changes
-  dispatch({ type: reducerCases.SET_PLAYING, currentPlaying: song });
-  dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
-  },[song])
+    // set global state of song anytime local state(song) changes
+    dispatch({ type: reducerCases.SET_PLAYING, currentPlaying: song });
+    dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
+  }, [song]);
 
   const handleSubmit = async () => {
     const response = await axios.get(
@@ -72,24 +72,21 @@ function Search() {
       artists: artists,
       duration: duration,
       name: name,
-    }));
+    }));  
 
-    
     try {
-      if (songurl != null) {  //on first render songurl == null; prevents error
-      
+      if (songurl != null) {
+        //on first render songurl == null; prevents error
+
         songurl.pause();
         songurl.load();
       }
-      let newSong = new Audio(track_preview_url)
-      newSong.play()
-      setSongUrl(newSong)
-  
+      let newSong = new Audio(track_preview_url);
+      newSong.play();
+      setSongUrl(newSong);
     } catch (error) {
-      throw error
+      throw error;
     }
-    
-    
   };
 
   return (
@@ -115,7 +112,6 @@ function Search() {
               </div>
               <div>
                 <button
-                  
                   className="p-2.5 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   onClick={() => handleSubmit()}
                 >
@@ -136,14 +132,15 @@ function Search() {
                     track_preview_url,
                   }) => (
                     <div
+                    
                       onClick={() =>
                         playSong(
                           track_preview_url,
                           id,
                           image,
                           artists,
-                          duration, 
-                          name,
+                          duration,
+                          name
                         )
                       }
                       className="w-full h-[4rem] bg-white my-1 flex items-center justify-between rounded-[10px] cursor-pointer  space-x-2"
@@ -156,18 +153,18 @@ function Search() {
                           alt={`${name} image`}
                         />
                       </div>
-                      <div className="text-center  hidden md:flex font-bold text-black md:max-w-[8rem] truncate">
+                      <div className="text-center  hidden md:flex font-bold text-black md:w-[8rem] truncate">
                         {name}
                       </div>
-                      <div className="text-center hidden md:flex font-normal text-sm text-black   truncate">
+                      <div className="text-center hidden md:flex font-normal text-sm text-black md:w-[8rem]  truncate">
                         {artists}
                       </div>
-
-                      <div className=" flex flex-col max-w-[15rem] md:hidden md:flex-row  md:max-w-[25rem]">
+                        {/* //for small screen */}
+                      <div className=" flex flex-col max-w-[15rem] md:hidden md:flex-row  md:w-[25rem]">
                         <div className="text-center  font-bold text-black truncate">
                           {name}
                         </div>
-                        <div className="text-center font-normal text-sm text-black max-w-[12rem] md:max-w-[25rem] truncate">
+                        <div className="text-center font-normal text-sm text-black max-w-[12rem] md:w-[25rem] truncate">
                           {artists}
                         </div>
                       </div>
@@ -182,11 +179,13 @@ function Search() {
             )}
           </div>
         </div>
+        
+
       </div>
 
       <div className="w-full  h-full z-10 md:ml-[230px]">
         <Footer />
-        <SmScreenFooter/>
+        <SmScreenFooter />
       </div>
       <div className="block md:hidden">
         <SmallScreenNav />

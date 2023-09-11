@@ -7,7 +7,7 @@ import Footer from "./Footer";
 import SmallScreenNav from "./SmallScreenNav";
 import SmScreenFooter from "./SmScreenFooter";
 
-function Library() {
+function Library({audioRef}) {
   const [
     { token, playlists, selectedPlaylist, selectedPlaylistId, currentPlaying },
     dispatch,
@@ -173,6 +173,7 @@ function Library() {
                       <div
                         className="w-full h-[4rem] bg-white my-1 flex items-center justify-between rounded-[10px] cursor-pointer space-x-2"
                         key={id}
+                        ref={audioRef}
                         onClick={() =>
                           playSong(
                             track_preview_url,

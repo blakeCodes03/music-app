@@ -13,10 +13,10 @@ function CurrentTrack() {
           <img
             className=" rounded-[25px] shadow-md"
             src={currentPlaying.image}
-            alt={currentPlaying.name + `image`}
+            alt={currentPlaying.name + ` image`}
           />
         </div>
-        <div className="flex flex-col gap-2 max-w-[13rem] font-bold truncate md:max-w-none md:gap-0 ">
+        <div className="flex flex-col w-[13rem] font-bold truncate md:max-w-none ">
           <h4 className="text-black md:text-2xl">{currentPlaying.name}</h4>
           <h6 className="text-[#b3b3b3]">{currentPlaying.artists}</h6>
         </div>
