@@ -6,12 +6,23 @@ import Sidebar from "./Sidebar";
 import Footer from "./Footer";
 import SmallScreenNav from "./SmallScreenNav";
 import SmScreenFooter from "./SmScreenFooter";
+import Loader from "./Loader";
 
-function Library({audioRef}) {
+function Library() {
   const [
-    { token, playlists, selectedPlaylist, selectedPlaylistId, currentPlaying },
+    {
+      token,
+      playlists,
+      selectedPlaylist,
+      selectedPlaylistId,
+      currentPlaying,
+      tracksUrlArray,
+      isLoading,
+    },
     dispatch,
   ] = useStateProvider();
+  const [urlsArray, setUrlsArray] = useState();
+  const [trackIndex, setTrackIndex] = useState(0);
   const [songurl, setSongUrl] = useState();
   const [song, setSong] = useState({
     id: null,
@@ -41,6 +52,7 @@ function Library({audioRef}) {
     getPlaylistData();
 
     const getInitialPlaylist = async () => {
+      dispatch({ type: reducerCases.SET_LOADING_STATE, isLoading: true });
       const response = await axios.get(
         `https://api.spotify.com/v1/playlists/${selectedPlaylistId}`,
         {
@@ -70,12 +82,17 @@ function Library({audioRef}) {
         })),
       };
       dispatch({ type: reducerCases.SET_PLAYLIST, selectedPlaylist });
+      dispatch({ type: reducerCases.SET_LOADING_STATE, isLoading: false });
+
+      //setting selected playlist songs as local state urlsArray
+      setUrlsArray(selectedPlaylist.tracks);
     };
     getInitialPlaylist();
 
-    // set global state of song anytime local state(song) changes
-    dispatch({ type: reducerCases.SET_PLAYING, currentPlaying: song });
-    dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
+    if (song.name != null) {
+      // set global state of song anytime local state(song) changes
+      dispatch({ type: reducerCases.SET_PLAYING, currentPlaying: song });
+    }
   }, [token, dispatch, selectedPlaylistId, song]);
 
   const changeCurrentPlaylist = (selectedPlaylistId) => {
@@ -109,9 +126,47 @@ function Library({audioRef}) {
       let newSong = new Audio(track_preview_url);
       newSong.play();
       setSongUrl(newSong);
+      dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
+      dispatch({ type: reducerCases.SET_TRACK_URL, trackUrl: newSong }); // setting the same Audio instance (newSong) as trackUrl global state so that the same instace can be used to pause/play music from other pages
     } catch (error) {
       throw error;
     }
+  };
+
+  //functions to handle next/prev funtionality and is passed as props to footer components
+  const handleNext = () => {
+    if (trackIndex >= urlsArray.length - 1) {
+      setTrackIndex(0);
+    } else {
+      setTrackIndex((prev) => prev + 1);
+    }
+    //playsong function is called with next song's details as paramters
+    playSong(
+      urlsArray[trackIndex].track_preview_url,
+      urlsArray[trackIndex].id,
+      urlsArray[trackIndex].image,
+      urlsArray[trackIndex].artists,
+      urlsArray[trackIndex].duration,
+      urlsArray[trackIndex].name
+    );
+  };
+
+  const handlePrevious = () => {
+    if (trackIndex === 0) {
+      let lastTrackIndex = tracks.length - 1;
+      setTrackIndex(lastTrackIndex);
+    } else {
+      setTrackIndex((prev) => prev - 1);
+    }
+    //playsong function is called with next song's details as paramters
+    playSong(
+      urlsArray[trackIndex].track_preview_url,
+      urlsArray[trackIndex].id,
+      urlsArray[trackIndex].image,
+      urlsArray[trackIndex].artists,
+      urlsArray[trackIndex].duration,
+      urlsArray[trackIndex].name
+    );
   };
 
   return (
@@ -148,74 +203,80 @@ function Library({audioRef}) {
                 ))}
               </div>
             </div>
-
-            {selectedPlaylist && (
-              <div className="mt-4 mb-10 h-full bg-transparent rounded-[30px]">
-                <h1 className="mt-2 mb-1 ml-4 font-bold text-lg">
-                  {selectedPlaylist.name}
-                </h1>
-                <div className="px-4 flex flex-col w-full mb-10 md:mb-24  items-center">
-                  {selectedPlaylist.tracks.map(
-                    (
-                      {
-                        id,
-                        name,
-                        artists,
-                        image,
-                        duration,
-                        album,
-                        context_uri,
-                        track_number,
-                        track_preview_url,
-                      },
-                      index
-                    ) => (
-                      <div
-                        className="w-full h-[4rem] bg-white my-1 flex items-center justify-between rounded-[10px] cursor-pointer space-x-2"
-                        key={id}
-                        ref={audioRef}
-                        onClick={() =>
-                          playSong(
-                            track_preview_url,
-                            id,
-                            image,
-                            artists,
-                            duration,
-                            name
-                          )
-                        }
-                      >
-                        <div className="flex items-center">
-                          <p className="text-black">{index + 1}</p>
-                          <img
-                            className=" rounded-[8px] w-[50px] h-[50px] p-1 ml-2"
-                            src={image}
-                            alt={`${name} image`}
-                          />
-                        </div>
-                        <div className=" flex flex-col max-w-[12rem] md:max-w-[20rem]">
-                          <div className="text-center font-bold text-black truncate">
-                            {name}
+            {isLoading ? (
+              <Loader />
+            ) : (
+              selectedPlaylist && (
+                <div className="mt-4 mb-10 h-full bg-transparent rounded-[30px]">
+                  <h1 className="mt-2 mb-1 ml-4 font-bold text-lg">
+                    {selectedPlaylist.name}
+                  </h1>
+                  <div className="px-4 flex flex-col w-full mb-10 md:mb-24  items-center">
+                    {selectedPlaylist.tracks.map(
+                      (
+                        {
+                          id,
+                          name,
+                          artists,
+                          image,
+                          duration,
+                          track_preview_url,
+                        },
+                        index
+                      ) => (
+                        <div
+                          className="w-full h-[4rem] bg-white my-1 flex items-center justify-between rounded-[10px] cursor-pointer space-x-2"
+                          key={id}
+                          onClick={() =>
+                            playSong(
+                              track_preview_url,
+                              id,
+                              image,
+                              artists,
+                              duration,
+                              name
+                            )
+                          }
+                        >
+                          <div className="flex items-center">
+                            <p className="text-black">{index + 1}</p>
+                            <img
+                              className=" rounded-[8px] w-[50px] h-[50px] p-1 ml-2"
+                              src={image}
+                              alt={`${name} image`}
+                            />
                           </div>
-                          <div className="text-center font-normal text-sm text-black truncate">
-                            {artists}
+                          <div className=" flex flex-col max-w-[12rem] md:max-w-[20rem]">
+                            <div className="text-center font-bold text-black truncate">
+                              {name}
+                            </div>
+                            <div className="text-center font-normal text-sm text-black truncate">
+                              {artists}
+                            </div>
+                          </div>
+                          <div className="text-center font-bold text-black pr-4">
+                            <span>{msToMinutesAndSeconds(duration)}</span>
                           </div>
                         </div>
-                        <div className="text-center font-bold text-black pr-4">
-                          <span>{msToMinutesAndSeconds(duration)}</span>
-                        </div>
-                      </div>
-                    )
-                  )}
+                      )
+                    )}
+                  </div>
                 </div>
-              </div>
+              )
             )}
           </div>
         </div>
       </div>
       <div className="w-full h-full z-10 lg:ml-[230px]">
-        <Footer />
-        <SmScreenFooter />
+        {/*sending handleNext/handleprev as props to playerControls to achieve prev/next functionality */}
+        <Footer
+          handleNextSong={handleNext}
+          handlePreviousSong={handlePrevious}
+        />
+        <SmScreenFooter
+          handleNextSong={handleNext}
+          handlePreviousSong={handlePrevious}
+        />
       </div>
       <div className="block md:hidden">
         <SmallScreenNav />

@@ -15,14 +15,13 @@ function Spotify() {
         </div>
       </div>
       <div className="">
-
-      <div className=" z-10 h-full w-full bg-white md:ml-[190px]  md:p-4">
-      <Footer/>
-      <SmScreenFooter/>      
-      </div>
-      <div className="h-full w-full block md:hidden">
-      <SmallScreenNav/>
-      </div>
+        <div className=" z-10 h-full w-full bg-white md:ml-[190px]  md:p-4">
+          <Footer />
+          <SmScreenFooter />
+        </div>
+        <div className="h-full w-full block md:hidden">
+          <SmallScreenNav />
+        </div>
       </div>
     </div>
   );

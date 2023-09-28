@@ -13,6 +13,9 @@ export const initialState = {
   categories: null,
   featuredPlaylist: null,
   searchResults: null,
+  trackUrl: null,
+  isLoading: false,
+ 
 };
 
 const reducer = (state, action) => {
@@ -77,6 +80,17 @@ const reducer = (state, action) => {
         ...state,
         searchResults: action.searchResults,
       };
+      case reducerCases.SET_TRACK_URL:
+        return {
+          ...state,
+          trackUrl: action.trackUrl,
+      };
+      case reducerCases.SET_LOADING_STATE:
+        return {
+          ...state,
+          isLoading: action.isLoading,
+      };
+      
       
       
     default:
