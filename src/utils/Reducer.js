@@ -14,7 +14,7 @@ export const initialState = {
   featuredPlaylist: null,
   searchResults: null,
   trackUrl: null,
-  isLoading: false,
+  isLoading: true,
  
 };
 

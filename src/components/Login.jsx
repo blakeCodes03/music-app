@@ -2,8 +2,10 @@ import React from "react";
 
 export default function Login() {
   const handleClick = async () => {
+    // const client_id = import.meta.env.VITE_REACT_APP_CLIENT_ID;
     const client_id = "4567db63ed674cb1a2bd5d6f722f7227";
-    const redirect_uri = "http://localhost:5173/";
+    // const redirect_uri = "http://localhost:5173/";
+    const redirect_uri = "https://music-app-eta-ecru.vercel.app/";
     const api_uri = "https://accounts.spotify.com/authorize";
     const scope = [
       "user-read-private",

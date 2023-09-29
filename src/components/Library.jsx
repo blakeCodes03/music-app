@@ -48,6 +48,8 @@ function Library() {
         return { name, id, images };
       });
       dispatch({ type: reducerCases.SET_PLAYLISTS, playlists });
+      dispatch({ type: reducerCases.SET_LOADING_STATE, isLoading: false });
+
     };
     getPlaylistData();
 
